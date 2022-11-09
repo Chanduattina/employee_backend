@@ -11,4 +11,4 @@ class Employee(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(255), unique=True, nullable=False)
     yob = Column(Integer, nullable=False)
-    # gender = Column(String(1))
+    gender = Column(String(1))
