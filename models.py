@@ -12,3 +12,5 @@ class Employee(Base):
     name = Column(String(255), unique=True, nullable=False)
     yob = Column(Integer, nullable=False)
     gender = Column(String(1))
+    email = Column(String(100))
+
