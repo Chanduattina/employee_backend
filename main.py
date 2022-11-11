@@ -53,9 +53,17 @@ def employe_details(id: int = None):
     return session.query(Employee).filter(Employee.id == id).one()
 
 
-@app.post("/v2/update_employee")
+@app.post("/v2/update_employee/")
 def update_data(yob=Body(..., embed=True)):
     db = Session()
     db.query(Employee).filter(Employee.yob == 1900). \
-            update({Employee.yob: yob}, synchronize_session='evaluate')
+        update({Employee.yob: yob}, synchronize_session='evaluate')
     return db.query(Employee).filter(Employee.yob == yob).all()
+
+
+@app.put("/v2/update_employees/")
+def update_database(old_yob: int = Body(..., embed=True), new_yob: int = Body(..., embed=True)):
+    db = Session()
+    db.query(Employee).filter(Employee.yob == old_yob). \
+        update({Employee.yob: new_yob}, synchronize_session=False)
+    return db.query(Employee).filter(Employee.yob == new_yob).all()
