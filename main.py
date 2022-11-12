@@ -70,6 +70,9 @@ def update_data(yob=Body(..., embed=True)):
 
 @app.post("/v2/update_employees/")
 def update_database(old_yob: int = Body(..., embed=True), new_yob: int = Body(..., embed=True)):
+    current_date = date.today()
+    if new_yob > current_date.year:
+        raise Exception("Year does not exceed this year")
     db = Session()
     db.query(Employee).filter(Employee.yob == old_yob). \
         update({Employee.yob: new_yob}, synchronize_session=False)
