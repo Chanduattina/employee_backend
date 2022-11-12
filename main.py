@@ -19,12 +19,13 @@ def employee_details():
 
 
 @app.get("/employee/")
-def employee_details(id: int=None):
+def employee_details(id: int = None):
     if id is None:
         return None
     elif id > 4:
-        return Response("Id does not exist",status_code=404)
+        return Response("Id does not exist", status_code=404)
     return find_employee_by_id(id)
+
 
 @app.get("/ping")
 def ping():
@@ -50,12 +51,13 @@ def get_employee_details():
 
 
 @app.get("/v2/employee_/")
-def employe_details(id: int = None):
-    if id > 3:
+def employee_details(id: int = None):
+    if id is None:
+        raise Exception("Enter the id")
+    elif id > 3 or id < 1:
         raise Exception("id does not exist")
-    elif id is None:
-        return None
-    return session.query(Employee).filter(Employee.id == id).one()
+    else:
+        return session.query(Employee).filter(Employee.id == id).one()
 
 
 @app.post("/v2/update_employee/")
@@ -67,7 +69,7 @@ def update_yob(yob=Body(..., embed=True)):
             update({Employee.yob: yob}, synchronize_session='evaluate')
         return db.query(Employee).filter(Employee.yob == yob).all()
     else:
-        return Response("Check Year",status_code=404)
+        return Response("Check Year", status_code=404)
 
 
 @app.post("/v2/update_employees/")
