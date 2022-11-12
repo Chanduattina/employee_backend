@@ -51,7 +51,9 @@ def get_employee_details():
 
 @app.get("/v2/employee_/")
 def employe_details(id: int = None):
-    if id is None:
+    if id > 3:
+        raise Exception("id does not exist")
+    elif id is None:
         return None
     return session.query(Employee).filter(Employee.id == id).one()
 
