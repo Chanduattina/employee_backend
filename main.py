@@ -57,7 +57,7 @@ def employe_details(id: int = None):
 
 
 @app.post("/v2/update_employee/")
-def update_data(yob=Body(..., embed=True)):
+def update_yob(yob=Body(..., embed=True)):
     current_date = date.today()
     if yob <= current_date.year:
         db = Session()
@@ -69,7 +69,7 @@ def update_data(yob=Body(..., embed=True)):
 
 
 @app.post("/v2/update_employees/")
-def update_database(old_yob: int = Body(..., embed=True), new_yob: int = Body(..., embed=True)):
+def update_yob_by_user(old_yob: int = Body(..., embed=True), new_yob: int = Body(..., embed=True)):
     current_date = date.today()
     if new_yob > current_date.year:
         raise Exception("Year does not exceed this year")
