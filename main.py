@@ -1,5 +1,7 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI, Body
+from starlette.responses import Response
+from datetime import date
 
 from data import employees, Item, Year
 from database import session, Session
@@ -17,11 +19,12 @@ def employee_details():
 
 
 @app.get("/employee/")
-def employe_details(id: int = None):
+def employee_details(id: int=None):
     if id is None:
         return None
+    elif id > 4:
+        return Response("Id does not exist",status_code=404)
     return find_employee_by_id(id)
-
 
 @app.get("/ping")
 def ping():
@@ -55,13 +58,17 @@ def employe_details(id: int = None):
 
 @app.post("/v2/update_employee/")
 def update_data(yob=Body(..., embed=True)):
-    db = Session()
-    db.query(Employee).filter(Employee.yob == 1900). \
-        update({Employee.yob: yob}, synchronize_session='evaluate')
-    return db.query(Employee).filter(Employee.yob == yob).all()
+    current_date = date.today()
+    if yob <= current_date.year:
+        db = Session()
+        db.query(Employee).filter(Employee.yob == 1900). \
+            update({Employee.yob: yob}, synchronize_session='evaluate')
+        return db.query(Employee).filter(Employee.yob == yob).all()
+    else:
+        return Response("Check Year",status_code=404)
 
 
-@app.put("/v2/update_employees/")
+@app.post("/v2/update_employees/")
 def update_database(old_yob: int = Body(..., embed=True), new_yob: int = Body(..., embed=True)):
     db = Session()
     db.query(Employee).filter(Employee.yob == old_yob). \
